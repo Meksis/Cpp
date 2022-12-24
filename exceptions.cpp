@@ -4,14 +4,6 @@
 
 using namespace std;
 
-class MyExcept2 {
-    string msg;
-    
-    public:
-        MyExcept2(const string& s) : msg(s) {}
-        const char* message() const { return msg.c_str(); }
-};
-
 int main()
 {
     string a_input, b_input, c_input;
