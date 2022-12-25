@@ -1,109 +1,56 @@
-/*Создать класс Man (человек), с полями: имя, возраст, пол и вес. 
-Определить методы переназначения имени, изменения возраста и изменения веса. 
-Создать производный класс Student, имеющий поле года обучения. 
-Определить методы переназначения и увеличения года обучения.
-*/
-
-
 #include <iostream>
-#include <string>
+#include <cmath>
+#include <string.h>
 
 using namespace std;
 
+class Except_1 {};
 
-class Man {
-    public:
-        string name;
-        int age;
-        bool gender;
-        double weight;
-        
-        Man (string name_set, int age_set, bool gender_set, double weight_set) {
-            if (age_set < 1 or age_set > 130) {
-                cout << "Incorrect age for " << name_set;
-                exit(1);
-            }
-            else age = age_set;
-            
-            if (weight_set < 0.2) {
-                cout << "Incorrect weight for " << name_set;
-                exit(1);
-            }
-            else weight = weight_set;
-            
-            name = name_set;
-            age = age_set;
-            gender = gender_set;
-            weight = weight_set;
-        }
-        
-        
+class Except_2 {
+    string msg;
     
-    
-        void change_name(Man &object, string new_name) {
-            object.name = new_name;
-        }
-        
-        void change_age(Man &object, int new_age) {
-            if (new_age < 1) {
-                cout << "Incorrect age for " << name;
-                exit(1);
-            }
-            else object.age = new_age;
-        }
-        
-        void change_weight(Man &object, double new_weight) {
-            if (new_weight < 0.2) {
-                cout << "Incorrect weight for " << name;
-                exit(1);
-            }
-            else object.weight = new_weight;
-        }
+public:
+    Except_2(const string &s) : msg(s) {}
+    const char *message() const 
+    { 
+        return msg.c_str(); 
+    }
 };
 
-
-class Student : public Man
-    {
-    public:
-        int study_year;
-        
-        using Man::Man;
-        
-        
-        void change_year(Student &object, int new_year) {
-            if (new_year < 1900 or new_year > 2022) {
-                cout << "Incorrect year for " << name;
-                exit(1);
-            }
-            else object.study_year = new_year;
-        }
-        
-        void year_add(Student &object, int add_year) {
-            if (add_year < 0) {
-                cout << "Incorrect year for " << name;
-                exit(1);
-            }
-            else object.study_year += add_year;
-        }
-    };
+class Except_3 : public Except_2 {};
 
 
 int main()
 {
-    Man a("Инокентий", 17, 1, 59.03);
-    Student b("Зинаида", 120, 0, 50);
+    string a_input, b_input, c_input;
+    double a, b, c, x;
     
-    cout << a.name << endl << a.age << endl << a.gender << endl << a.weight << endl << endl;
-    a.change_name(a, "Анатолий");
-    cout << a.name << endl << a.age << endl << a.gender << endl << a.weight << endl << endl;
+    cout << "Type a: "; cin >> a_input;
+    cout << "Type b: "; cin >> b_input;
+    cout << "Type c: "; cin >> c_input;
     
-    b.change_name(b, "Ирина");
-    cout << b.name << endl << b.age << endl << b.gender << endl << b.weight << endl << b.study_year << endl << endl;
+    try {
+        a = stoi(a_input), b = stoi(b_input), c = stoi(c_input);
+    }
     
-    b.change_year(b, 2000);
-    b.year_add(b, 10);
-    cout << b.name << endl << b.age << endl << b.gender << endl << b.weight << endl << b.study_year << endl << endl;
-
+    catch (...) {
+        cout << "Incorrect data input";
+        return 1;
+    }
+    
+    
+    if((b*b - 4*a*c) >= 0)
+    {
+        x = ( -1*b + sqrt(b*b - 4*a*c) ) / (2 * a);
+        cout << "First root" << x << endl;
+        
+        x = ( -1*b - sqrt(b*b - 4*a*c) ) / (2 * a);
+        cout << "Second root" << x << endl;
+    }
+    else
+    {
+        cout << "D < 0, roots insubstantial." << endl;
+    }
 
     return 0;
 }
