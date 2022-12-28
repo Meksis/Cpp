@@ -4,6 +4,22 @@
 
 using namespace std;
 
+class Except_1 {};
+
+class Except_2 {
+    string msg;
+    
+public:
+    Except_2(const string &s) : msg(s) {}
+    const char *message() const 
+    { 
+        return msg.c_str(); 
+    }
+};
+
+class Except_3 : public Except_2 {};
+
+
 int main()
 {
     string a_input, b_input, c_input;
