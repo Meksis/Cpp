@@ -8,7 +8,6 @@ struct Node{
 };
 
 class List{
-    public:
     int count;
     Node * head, * tail;
     List();
@@ -164,6 +163,18 @@ void List::Display(){
     
         cout << temp->data << " )" << endl;
    }
+}
+
+int List::minus(int f, int s){
+    int size = sizeof(f);
+    int *new_arr = new int [size];
+    
+    for (int counter = 0; counter < sizeof(f); counter++) {
+        new_arr[counter] = f[counter] + s[counter];
+    }
+    
+    return new_arr;
+    
 }
 
 void List::getElem(int p){
