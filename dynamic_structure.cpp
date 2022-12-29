@@ -1,157 +1,237 @@
-#include <fstream>
 #include <iostream>
-#include <cstdlib>
-
 using namespace std;
-int main()
-{
-	char* fileName = new char[50];
-	char* buf_name = new char[20];
-	char* buf_value = new char[10];
 
-	cout << "Enter name of file -> ";
-	cin >> fileName;
-	ifstream* inp = new ifstream(fileName);
-	if (!inp->good())
-	{
-		cout << "File opening error!\n";
-		system("PAUSE");
-		return 0;
-	}
-	while (!inp->eof())
-	{
-		inp->getline(buf_name, 20, ' ');
-		inp->getline(buf_value, 10, ' ');
 
-struct comp {
-	char name[20];
-	char value[10;
-	comp* next;
+struct Node{
+    int data;
+    Node * next, * prev;
 };
 
-
-
-struct dyn_list {
-	comp* head;
-	comp* tail;
+class List{
+    public:
+    int count;
+    Node * head, * tail;
+    List();
+    void getElem(int p = 0);
+    void Del(int p = 0);
+    void Insert(int p = 0);
+    void Display();
+    void addTail(int n);
+    void addHead(int n);
 };
 
-
-void constr_list(dyn_list& l)
-{
-	l.head = NULL;
+List::List(){
+    head = tail = NULL;
+    count = 0;
+}
+void List::addHead(int n){
+    Node * temp = new Node;
+    temp->prev = 0;
+    temp->data = n;
+    temp->next = head;
+    
+    if(head != 0){
+        head->prev = temp;
+    }
+    if(count == 0){
+        head = tail = temp;
+    }else{
+        head = temp;
+    }
+    count++;
 }
 
+void List::addTail(int n){
+    Node * temp = new Node;
+    temp->next = 0;
+    temp->data = n;
+    temp->prev = tail;
+    
+    if(tail != 0){
+        tail->next = temp;
+    }
+    
 
-bool chk_empty(dyn_list l)
-{
-	return (l.head == NULL);
+    if(count == 0){
+        head = tail = temp;
+    }
+    else{
+        tail = temp;
+    }
+    count++;
 }
 
-dyn_list vars;
-constr_list(vars);
-
-
-
-void comp_in(dyn_list& l, char* n, char* v)
-{
-	comp* c = new comp();
-	
-	strcpy_s(c->name, 20, n);
-	strcpy_s(c->value, 10, v);
-	
-	c->next = NULL;
-	
-	if (chk_empty(l)) l.head = c;
-	else l.tail->next = c;
-	
-	l.tail = c;
+void List::Insert(int p){
+    if(p == 0){
+        cout << "Input position: ";
+        cin >> p;
+    }
+    
+    if(p < 1 || p > count + 1){
+        cout << "Incorrect position !!!" << endl;
+        return;
+    }
+    
+    if(p == count + 1){
+        int data;
+        cout << "Input new number: ";
+        cin >> data;
+        addTail(data);
+        return;
+    }
+    else if(p == 1){
+        int data;
+        cout << "Input new number: ";
+        cin >> data;
+        addHead(data);
+        return;
+    }
+    
+    int i = 1;
+    
+    Node * Ins = head;
+    
+    while(i < p){
+        Ins = Ins->next;
+        i++;
+    }
+    
+    Node * PrevIns = Ins->prev;
+    
+    Node * temp = new Node;
+    
+    cout << "Input new number: ";
+    cin >> temp->data;
+    
+    if(PrevIns != 0 && count != 1)
+        PrevIns->next = temp;
+    
+    temp->next = Ins;
+    temp->prev = PrevIns;
+    Ins->prev = temp;
+    
+    count++;
 }
 
+void List::Del(int p){
+    if(p == 0){
+        cout << "Input position: ";
+        cin >> p;
+    }
 
-comp* search(dyn_list l, char* n)
-{
-	while (l.head != NULL)
-	{
-		if (!strcmp(l.head->name, n))
-			return l.head;
-		l.head = l.head->next;
-	}
-	return l.head;
+    if(p < 1 || p > count){
+      cout << "Incorrect position!" << endl;
+      return;
+    }
+
+    int i = 1;
+    Node * Del = head;
+    
+    while(i < p){
+        Del = Del->next;
+        i++;
+    }
+    
+    Node * PrevDel = Del->prev;
+    Node * AfterDel = Del->next;
+    
+    if(PrevDel != 0 && count != 1){
+        PrevDel->next = AfterDel;
+        if(AfterDel != 0 && count != 1){
+            AfterDel->prev = PrevDel;
+        }
+    }
+    
+    if(p == 1){
+        head = AfterDel;
+    }
+    if(p == count)
+        tail = PrevDel;
+    
+    delete Del;
+    
+    count--;
 }
 
-
-
-void comp_del(dyn_list& l, comp* c)
-{
-	if (c == l.head)
-	{
-		l.head = c->next;
-		return;
-	}
-	comp* r = new comp();
-	r = l.head;
-	while (r->next != c)
-		r = r->next;
-	r->next = c->next;
-	delete c;
+void List::Display(){
+    if(count != 0){
+        Node * temp = head;
+        cout << "( ";
+        while(temp->next != 0){
+            cout << temp->data << ", ";
+            temp = temp->next;
+        }
+    
+        cout << temp->data << " )" << endl;
+   }
 }
 
+void List::getElem(int p){
+    if(p == 0){
+        cout << "Input position: ";
+        cin >> p;
+    }
 
-void comp_edit(comp& c, char* v)
-{
-	strcpy_s(c.value, 10, v);
+    if(p < 1 || p > count){
+        cout << "Incorrect position!" << endl;
+        return;
+    }
+
+    Node * temp;
+
+    if(p <= count / 2){
+        temp = head;
+        int i = 1;
+
+        while(i < p){
+            temp = temp->next;
+            i++;
+        }
+    }
+    else{
+        temp = tail;
+        int i = 1;
+
+        while(i <= count - p){
+            temp = temp->prev;
+            i++;
+        }
+    }
+    cout << p << " element: " << temp->data << endl;
 }
 
-int main()
-{
-	char* fileName = new char[50];
-	char* buf_name = new char[20];
-	char* buf_value = new char[10];
-	dyn_list vars;
-	cout << "Enter name of file ";
-	cin >> fileName;
-	
-	ifstream* inp = new ifstream(fileName);
-	if (!inp->good())
-	{
-		cout << "File opening error\n";
-		system("PAUSE");
-		return 0;
-	}
-	
-	constr_list(vars);
-	
-	while (!inp->eof())
-	{
-		inp->getline(buf_name, 20, ' ');
-		inp->getline(buf_value, 10, ' ');
-		comp_in(vars, buf_name, buf_value);
-	}
-	inp->close();
-	
-	comp* p = new comp();
-	p = search(vars, "z");
-	
-	if (p) comp_del(vars, p);
-	
-	p = search(vars, "abc");
-	
-	if (p) comp_edit(*p, "2");
-	
-	ofstream* out = new ofstream(fileName);
-	
-	while (vars.head != NULL)
-	{
-		out->write(vars.head->name, strlen(vars.head->name));
-		out->write(" ", 1);
-		out->write(vars.head->value, strlen(vars.head->value));
-		out->write(" ", 1);
-		vars.head = vars.head->next;
-	}
-	
-	out->close();
-	
-	system("PAUSE");
-	return 0;
+ostream& operator << (ostream &os, const List& s){
+    if(s.count != 0){
+        Node * temp = s.head;
+        os << "( ";
+        while(temp->next != 0){
+            os << temp->data << ", ";
+            temp = temp->next;
+        }
+    
+        os << temp->data << " )" << endl;
+   }
+    return os;
+}
+
+void List::showEvenNumbers() {
+    Node * temp = head;
+    while (temp) {
+        if (temp % 2 == 0) {
+            cout << temp;
+        }
+        temp = temp->next
+    }
+    
+}
+
+int main(){
+    List lst;
+    int a[10] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+    cout << "List: " << endl;
+    cout << lst;
+    lst.Insert();
+    cout << lst;
+    lst.getElem();
+
 }
