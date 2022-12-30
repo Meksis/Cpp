@@ -1,248 +1,91 @@
 #include <iostream>
+#include <iomanip>
 using namespace std;
-
-
-struct Node{
+ 
+struct List {
     int data;
-    Node * next, * prev;
+    List *prev, *next;
 };
 
-class List{
-    int count;
-    Node * head, * tail;
-    List();
-    void getElem(int p = 0);
-    void Del(int p = 0);
-    void Insert(int p = 0);
-    void Display();
-    void addTail(int n);
-    void addHead(int n);
-};
-
-List::List(){
-    head = tail = NULL;
-    count = 0;
-}
-void List::addHead(int n){
-    Node * temp = new Node;
-    temp->prev = 0;
-    temp->data = n;
-    temp->next = head;
-    
-    if(head != 0){
-        head->prev = temp;
+List * insert(List * last, List * p)
+{
+    if (last && p)
+    {
+        p->prev = last;
+        p->next = last->next;
+        last->next = p;
+        p->next->prev = p;
+        return p;
     }
-    if(count == 0){
-        head = tail = temp;
-    }else{
-        head = temp;
-    }
-    count++;
+    else
+        return NULL;
 }
 
-void List::addTail(int n){
-    Node * temp = new Node;
-    temp->next = 0;
-    temp->data = n;
-    temp->prev = tail;
-    
-    if(tail != 0){
-        tail->next = temp;
+void CreateList(List *&head, List *&tail)
+{
+    head = new List;
+    tail = new List;
+    head->next = tail;
+    tail->prev = head;
+    int k;
+    cout << "Input positive integers(input 0 to stop): " << endl;
+    cin >> k;
+    List * last = head;
+    while (k)
+    {
+        List * p = new List;
+        p->data = k;
+        last = insert(last, p);
+        cin >> k;
     }
-    
-
-    if(count == 0){
-        head = tail = temp;
-    }
-    else{
-        tail = temp;
-    }
-    count++;
+    return;
 }
 
-void List::Insert(int p){
-    if(p == 0){
-        cout << "Input position: ";
-        cin >> p;
+void print(List * head, List * tail){
+    List * p = head->next;
+    while (p != tail)
+    {
+        cout << p->data << " ";
+        p = p->next;
     }
-    
-    if(p < 1 || p > count + 1){
-        cout << "Incorrect position !!!" << endl;
-        return;
-    }
-    
-    if(p == count + 1){
-        int data;
-        cout << "Input new number: ";
-        cin >> data;
-        addTail(data);
-        return;
-    }
-    else if(p == 1){
-        int data;
-        cout << "Input new number: ";
-        cin >> data;
-        addHead(data);
-        return;
-    }
-    
-    int i = 1;
-    
-    Node * Ins = head;
-    
-    while(i < p){
-        Ins = Ins->next;
-        i++;
-    }
-    
-    Node * PrevIns = Ins->prev;
-    
-    Node * temp = new Node;
-    
-    cout << "Input new number: ";
-    cin >> temp->data;
-    
-    if(PrevIns != 0 && count != 1)
-        PrevIns->next = temp;
-    
-    temp->next = Ins;
-    temp->prev = PrevIns;
-    Ins->prev = temp;
-    
-    count++;
+    cout << endl;
+    return;
 }
-
-void List::Del(int p){
-    if(p == 0){
-        cout << "Input position: ";
-        cin >> p;
-    }
-
-    if(p < 1 || p > count){
-      cout << "Incorrect position!" << endl;
-      return;
-    }
-
-    int i = 1;
-    Node * Del = head;
-    
-    while(i < p){
-        Del = Del->next;
-        i++;
-    }
-    
-    Node * PrevDel = Del->prev;
-    Node * AfterDel = Del->next;
-    
-    if(PrevDel != 0 && count != 1){
-        PrevDel->next = AfterDel;
-        if(AfterDel != 0 && count != 1){
-            AfterDel->prev = PrevDel;
+ 
+ void sort(List *&head, List *&tail) {
+    List *head2 = new List;
+    List *tail2 = new List;
+    List * last = head2;
+ 
+    head2->next = tail2;
+    tail2->prev = head2;
+    while (head->next != tail)
+    {
+        List *min = head->next, *p = head->next;
+        while (p != tail)
+        {
+            if (p->data < min->data)
+                min = p;
+            p = p->next;
         }
+        
+        min->next->prev = min->prev;
+        min->prev->next = min->next;
+ 
+        last = insert(last, min);
     }
-    
-    if(p == 1){
-        head = AfterDel;
-    }
-    if(p == count)
-        tail = PrevDel;
-    
-    delete Del;
-    
-    count--;
+    head = head2;
+    tail = tail2;
 }
-
-void List::Display(){
-    if(count != 0){
-        Node * temp = head;
-        cout << "( ";
-        while(temp->next != 0){
-            cout << temp->data << ", ";
-            temp = temp->next;
-        }
-    
-        cout << temp->data << " )" << endl;
-   }
-}
-
-int List::minus(int f, int s){
-    int size = sizeof(f);
-    int *new_arr = new int [size];
-    
-    for (int counter = 0; counter < sizeof(f); counter++) {
-        new_arr[counter] = f[counter] + s[counter];
-    }
-    
-    return new_arr;
-    
-}
-
-void List::getElem(int p){
-    if(p == 0){
-        cout << "Input position: ";
-        cin >> p;
-    }
-
-    if(p < 1 || p > count){
-        cout << "Incorrect position!" << endl;
-        return;
-    }
-
-    Node * temp;
-
-    if(p <= count / 2){
-        temp = head;
-        int i = 1;
-
-        while(i < p){
-            temp = temp->next;
-            i++;
-        }
-    }
-    else{
-        temp = tail;
-        int i = 1;
-
-        while(i <= count - p){
-            temp = temp->prev;
-            i++;
-        }
-    }
-    cout << p << " element: " << temp->data << endl;
-}
-
-ostream& operator << (ostream &os, const List& s){
-    if(s.count != 0){
-        Node * temp = s.head;
-        os << "( ";
-        while(temp->next != 0){
-            os << temp->data << ", ";
-            temp = temp->next;
-        }
-    
-        os << temp->data << " )" << endl;
-   }
-    return os;
-}
-
-void List::showEvenNumbers() {
-    Node * temp = head;
-    while (temp) {
-        if (temp % 2 == 0) {
-            cout << temp;
-        }
-        temp = temp->next
-    }
-    
-}
-
-int main(){
-    List lst;
-    int a[10] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-    cout << "List: " << endl;
-    cout << lst;
-    lst.Insert();
-    cout << lst;
-    lst.getElem();
-
+ 
+int main()
+{
+    List *head, *tail = NULL;
+    CreateList(head, tail);
+    cout << "List" << endl;
+    print(head, tail);
+    sort(head, tail);
+    cout << "Sorted List" << endl;
+    print(head, tail);
+    system("pause");
 }
