@@ -36,15 +36,25 @@ void inorder(Node* root) {
   inorder(root->right);
 }
 
+// Функция для осуществления замены значения дерева
+void replaceValue(Node *root, int oldVal, int newVal) {
+    if(root == NULL) return;
+    if(root->data == oldVal) {
+        root->data = newVal;
+    }
+    replaceValue(root->left, oldVal, newVal);
+    replaceValue(root->right, oldVal, newVal);
+}
 
 int main() {
   Node* root = NULL; // Создадим корень дерева 
-  insert(&root, 15); // Добавим данные в дерево
+  insert(&root, 150); // Добавим данные в дерево
   insert(&root, 10);
   insert(&root, 20);
   insert(&root, 25);
   insert(&root, 8);
   insert(&root, 12);
+  replaceValue(root, 12, 200);
   cout << "Прямой обход дерева: ";
   inorder(root);
   cout << endl;
