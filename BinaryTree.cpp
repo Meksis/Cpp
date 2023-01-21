@@ -8,10 +8,16 @@ struct Node {
   Node* right;
 };
 
-
+// Создание шаблонного класса Tree для описания методов и самого бинарного дерева
 template<class Type>
 class Tree{
   public:
+    Type root = NULL;
+    
+    Tree (Type root_new) {
+        root = root_new;
+    }
+  
     Type get_new_node(int data) {
       Type newNode = new Node();
       newNode->data = data;
@@ -55,34 +61,24 @@ class Tree{
 };
 
 
-
-
-
-
-
-
 int main() {
-    Tree<Node*> binary_tree;
+    Tree<Node*> binary_tree(NULL);
     
-    Node* root = NULL; // Создадим корень дерева 
+    binary_tree.insert(&binary_tree.root, 150); // Заполним ветки дерева значениями
+    binary_tree.insert(&binary_tree.root, 1246);
+    binary_tree.insert(&binary_tree.root, 231);
+    binary_tree.insert(&binary_tree.root, 927);
+    binary_tree.insert(&binary_tree.root, 364);
+    binary_tree.insert(&binary_tree.root, 248);
+    binary_tree.insert(&binary_tree.root, 207);
+    binary_tree.insert(&binary_tree.root, 1169);
+    binary_tree.insert(&binary_tree.root, 522);
+    binary_tree.insert(&binary_tree.root, 201);
+    binary_tree.insert(&binary_tree.root, 819);
     
-    binary_tree.insert(&root, 150); // Заполним ветки дерева значениями
-    binary_tree.insert(&root, 12);
-    binary_tree.insert(&root, 1121);
-    binary_tree.insert(&root, 1145);
-    binary_tree.insert(&root, 474);
-    binary_tree.insert(&root, 1410);
-    binary_tree.insert(&root, 1197);
-    binary_tree.insert(&root, 857);
-    binary_tree.insert(&root, 1373);
-    binary_tree.insert(&root, 328);
-    binary_tree.insert(&root, 858);
-    binary_tree.insert(&root, 214);
-  
-    binary_tree.replaceValue(root, 12, 200); // Заменяем число 12 на 200
+    binary_tree.replaceValue(binary_tree.root, 1246, 200); // Заменяем число 1246 на 200
     
-    binary_tree.inorder(root); // Выводим дерево в порядке возрастания элементов ( Кроме 200, поскольку это - замененное число 12 )
-    
+    binary_tree.inorder(binary_tree.root); // Выводим дерево в порядке возрастания элементов ( Кроме 200, поскольку это - замененное число 1246 )
     
     return 0;
 }
